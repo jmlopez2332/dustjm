@@ -29,6 +29,23 @@ class Core{
     //requerir el controlador
     require_once '../app/controladores/'.$this->controladorActual.'.php';
     $this->controladorActual = new $this->controladorActual;
+
+    //Verificar la segunda parte de la url, el Metodo
+    if (isset($url[1])) {
+      if (method_exists($this->controladorActual, $url[1])) {
+        //Verificar Metodo
+        $this->metodoActual = $url[1];
+        unset($url[1]);
+      }
+    }
+    //para probar traer metodo
+    //echo $this->metodoActual
+
+    //obtener los parametros
+    $this->parametros=$url?array_values($url): [];
+
+    //llamar callback con parametros array
+    call_user_func_array([$this->controladorActual,$this->metodoActual],$this->parametros);
   }
 
   public function getUrl(){
